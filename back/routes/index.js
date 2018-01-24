@@ -8,4 +8,8 @@ router
   .post(Gifts.create)
   .delete(Gifts.delete);
 
+router
+  .route('/api/notify')
+  .post(Gifts.notify);
+
 module.exports = router;

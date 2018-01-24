@@ -1,7 +1,8 @@
-
 const GiftModel = require('../models/Gift');
+const NotifyService = require('../services/Notify');
 
 const Gifts = {
+
     create: (req, res, next) => {
       if(! req.body || ! req.body.name || ! req.body.name.trim()) {
         return res.status(400).json({
@@ -17,16 +18,42 @@ const Gifts = {
           });
         });
     },
+
     read: (req, res, next) => {
       GiftModel.readAll()
         .then(gifts => res.json(gifts));
 
     },
-    delete: (req, res, next) => {
 
+    delete: (req, res, next) => {
+      if(! req.body || ! req.body.id) {
+        return res.status(400).json({
+          error: "Body not found or required 'id' property not found in body"
+        });
+      }
+      // Here I simply send back the number of deleted rows
+      GiftModel.delete(req.body.id)
+        .then(result => res.json({
+          deletedRows: result.affectedRows
+        }));
     },
+
     notify: (req, res, next) => {
         // Send a mail to Santa
+        GiftModel.readAll()
+          .then(gifts => gifts.map(g => '<li>' + g + '</li>'))
+          .then(giftItems => '<ul>' + giftItems.join('') + '</ul>')
+          .then(giftsHtml => NotifyService.sendEmail(
+            //'florian@wildcodeschool.fr',
+            'benoithubert@gmail.com',
+            'My Christmas Wishlist',
+            giftsHtml
+          ))
+          .then(() => {
+            res.json({
+              success: true
+            });
+          });
     }
 }
 

@@ -22,6 +22,12 @@ const Gift = {
       .query(insertQuery)
       .then(result => pool.query(selectQuery + result.insertId))
       .then(records => (records[0]));
+  },
+
+  delete: function(id) {
+    const deleteQuery = 'delete from gifts where id = ' + id;
+    return pool
+      .query(deleteQuery);
   }
 };
 

@@ -13,6 +13,7 @@ class App extends Component {
 
     this.addGift = this.addGift.bind(this);
     this.removeGift = this.removeGift.bind(this);
+    this.notify = this.notify.bind(this);
   }
 
   componentWillMount() {
@@ -47,21 +48,50 @@ class App extends Component {
           gifts: [...gifts].concat([gift])
         }));
       });
-
   }
 
   removeGift(name) {
     const { gifts } = this.state;
     const gift = gifts.find(g => (g.name === name));
+    const { id } = gift;
+    console.log(gift, id);
     const giftIndex = gifts.indexOf(gift);
-    const newGifts = [...gifts];
-    newGifts.splice(giftIndex, 1);
 
-    this.setState((prevState, props) => ({
-      gifts: newGifts
-    }));
+    fetch('/api', {
+      method: 'DELETE',
+      body: JSON.stringify({ id }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(gift => {
+        const newGifts = [...gifts];
+        newGifts.splice(giftIndex, 1);
+        this.setState((prevState, props) => ({
+          gifts: newGifts
+        }));
+      });
   }
 
+  notify(e) {
+    e.preventDefault();
+
+    fetch('/api/notify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState((prevState, props) => ({
+          gifts: this.state.gifts
+        }));
+      });
+  }
   render() {
     return (
       <div className="App">
@@ -83,7 +113,7 @@ class App extends Component {
           ))}
         </div>
 
-        <button type="button" className="mail"> Dear Santa Florian, send me my gifts</button>
+        <button type="button" className="mail" onClick={this.notify}> Dear Santa Florian, send me my gifts</button>
 
       </div>
     );
