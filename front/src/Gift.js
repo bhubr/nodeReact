@@ -3,14 +3,19 @@ import './Gift.css';
 
 class Gift extends Component {
   constructor(props){
-    super(props); 
+    super(props);
+    this.remove = this.remove.bind(this);
+  }
+
+  remove() {
+    this.props.remove(this.props.name);
   }
 
   render() {
     return (
       <div className="Gift">
-        UN SUPER CADEAU
-        <button className="remove">X</button>
+        {this.props.name}
+        <button className="remove" onClick={this.remove}>X</button>
       </div>
     );
   }

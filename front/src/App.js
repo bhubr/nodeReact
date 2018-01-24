@@ -8,14 +8,46 @@ class App extends Component {
     super(props);
 
     this.state = {
-      gifts: []
+      gifts: [
+        { id: 1, name: 'Ferrari LaFerrari' },
+        { id: 2, name: 'Palace en Espagne' },
+        { id: 3, name: 'Millenium Falcon' }
+      ]
     };
 
+    // Added temporarily, until we get real IDs from backend
+    this.nextId = 4;
+
+    this.addGift = this.addGift.bind(this);
     this.removeGift = this.removeGift.bind(this);
   }
 
-  removeGift() {
+  addGift(e) {
+    e.preventDefault();
+    const { gifts } = this.state;
+    const form = e.target;
+    const inputs = form.getElementsByTagName('INPUT');
+    const name = inputs[0].value;
+    inputs[0].value = '';
 
+    this.setState((prevState, props) => ({
+      gifts: [...gifts].concat([{
+        id: this.nextId++,
+        name
+      }])
+    }));
+  }
+
+  removeGift(name) {
+    const { gifts } = this.state;
+    const gift = gifts.find(g => (g.name === name));
+    const giftIndex = gifts.indexOf(gift);
+    const newGifts = [...gifts];
+    newGifts.splice(giftIndex, 1);
+
+    this.setState((prevState, props) => ({
+      gifts: newGifts
+    }));
   }
 
   render() {
@@ -28,14 +60,15 @@ class App extends Component {
 
         <img src="https://media.giphy.com/media/JltOMwYmi0VrO/giphy.gif" />
 
-        <form>
+        <form onSubmit={this.addGift}>
           <input type="text" />
           <button type="submit"> Ajouter </button>
         </form>
 
         <div className="GiftWrapper">
-          <Gift name="Ferrari LaFerrari" remove={this.removeGift} />
-          <Gift name="Palace en Espagne" remove={this.removeGift} />
+          {this.state.gifts.map(gift => (
+            <Gift key={gift.id} name={gift.name} remove={this.removeGift} />
+          ))}
         </div>
 
         <button type="button" className="mail"> Dear Santa Florian, send me my gifts</button>
