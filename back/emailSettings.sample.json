@@ -1,0 +1,11 @@
+{
+  "auth": {
+     "api_key": "key-something-xxxxyyyyzzzz",
+     "domain": "mg.some-domain.com"
+  },
+  "sender": "benoithubert@gmail.com",
+  "senderName": "Benoît",
+  "recipient": "florian@wildcodeschool.fr",
+  "header": "Dear Florian, I just finished making my wishlist for Santa. Here it is:",
+  "footer": "Please be careful on the road, and take good care of your deers :D. Best Regards,"
+}

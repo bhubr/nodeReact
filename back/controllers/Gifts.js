@@ -41,11 +41,9 @@ const Gifts = {
     notify: (req, res, next) => {
         // Send a mail to Santa
         GiftModel.readAll()
-          .then(gifts => gifts.map(g => '<li>' + g + '</li>'))
+          .then(gifts => gifts.map(g => '<li>' + g.name + '</li>'))
           .then(giftItems => '<ul>' + giftItems.join('') + '</ul>')
           .then(giftsHtml => NotifyService.sendEmail(
-            //'florian@wildcodeschool.fr',
-            'benoithubert@gmail.com',
             'My Christmas Wishlist',
             giftsHtml
           ))
