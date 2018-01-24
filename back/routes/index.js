@@ -3,7 +3,7 @@ const router = express.Router();
 const Gifts = require('../controllers/Gifts');
 
 router
-  .route('/')
+  .route('/api')
   .get(Gifts.read)
   .post(Gifts.create)
   .delete(Gifts.delete);

@@ -8,18 +8,21 @@ class App extends Component {
     super(props);
 
     this.state = {
-      gifts: [
-        { id: 1, name: 'Ferrari LaFerrari' },
-        { id: 2, name: 'Palace en Espagne' },
-        { id: 3, name: 'Millenium Falcon' }
-      ]
+      gifts: []
     };
-
-    // Added temporarily, until we get real IDs from backend
-    this.nextId = 4;
 
     this.addGift = this.addGift.bind(this);
     this.removeGift = this.removeGift.bind(this);
+  }
+
+  componentWillMount() {
+    fetch('/api')
+      .then(response => response.json())
+      .then(gifts => {
+        this.setState((prevState, props) => ({
+          gifts
+        }));
+      });
   }
 
   addGift(e) {
@@ -30,12 +33,21 @@ class App extends Component {
     const name = inputs[0].value;
     inputs[0].value = '';
 
-    this.setState((prevState, props) => ({
-      gifts: [...gifts].concat([{
-        id: this.nextId++,
-        name
-      }])
-    }));
+    fetch('/api', {
+      method: 'POST',
+      body: JSON.stringify({ name }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(gift => {
+        this.setState((prevState, props) => ({
+          gifts: [...gifts].concat([gift])
+        }));
+      });
+
   }
 
   removeGift(name) {
